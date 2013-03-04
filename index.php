@@ -19,7 +19,7 @@ include('lock.php');
 		<script type="text/javascript" language="javascript" charset="utf-8" src="js/jquery.min.js"></script>
 		<script type="text/javascript" language="javascript" charset="utf-8" src="js/jquery-ui-1.8.20.custom.min.js"></script>
 		<script type="text/javascript" language="javascript" charset="utf-8" src="js/jquery-ui-timepicker-addon.js"></script>
-		<script type="text/javascript" language="javascript" charset="utf-8" src="js/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" language="javascript" charset="utf-8" src="js/jquery.dataTables.js"></script>
 		<script type="text/javascript" language="javascript" charset="utf-8" src="js/dataTables.tabletools.min.js"></script>
 		<script type="text/javascript" language="javascript" charset="utf-8" src="js/dataTables.editor.min.js"></script>
 		

@@ -82,6 +82,9 @@ div.DTE_Footer_Content {
 
 
 div.DTE_Field {
+	position: relative;
+	zoom: 1;
+	
 	clear: both;
 	padding-top: 10px;
 	padding-left: 20%;
@@ -215,7 +218,7 @@ div.DTTT_container {
 
 
 /*
- * Namespace: DTED - Datatables Editor Display - Lightbox
+ * Namespace: DTED - DataTables Editor Display - Lightbox
  */
 
 div.DTED_Lightbox_Wrapper {
@@ -287,7 +290,7 @@ div.DTED_Lightbox_Background {
 
 
 /*
- * Namespace: DTED - Datatables Editor Display - Envelope
+ * Namespace: DTED - DataTables Editor Display - Envelope
  */
 
 div.DTED_Envelope_Wrapper {
@@ -378,5 +381,4 @@ div.DTED_Envelope_Background {
 	z-index: 10;
 	display: none;
 }
-
 

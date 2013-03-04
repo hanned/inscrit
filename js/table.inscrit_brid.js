@@ -264,16 +264,21 @@ $(document).ready(function() {
 			var rdv = new Date(aData.dt_rdv);
 			var today = new Date();
 			var delta = Math.floor((rdv - today) / (60 * 60 * 1000));
-			if(isNaN(delta)){
+			if(isNaN(delta) || aData.dt_rdv === null){
 				nRow.className = "warning";
 				return nRow;
 			}
-			if (delta > 0 && aData.eval > 0)
+			if (delta < 0 && aData.eval != "0.00")
 			{
 				nRow.className = "success";
 				return nRow;
 			}
-			if (delta < 0)
+			if (delta < 0 && aData.eval === "0.00")
+			{
+				nRow.className = "error";
+				return nRow;
+			}
+			if (delta > 0 && delta < 24)
 			{
 				nRow.className = "info";
 				return nRow;
