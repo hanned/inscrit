@@ -14,7 +14,7 @@ function fnFormatDetails ( nTr )
     var aData = oTable.fnGetData( nTr );
     var sOut = '<div class="container-fluid">';
         sOut += '<div class="row-fluid">';
-        sOut += '    <div class="span6">';
+        sOut += '    <div class="span4">';
 	sOut += '       <ul>';
         sOut += '        <li>Adresse : '+aData.adresse+'</li>';
         sOut += '        <li>Date de naissance : '+aData.dt_naissance+' </li>';
@@ -25,6 +25,7 @@ function fnFormatDetails ( nTr )
 	sOut += '       <ul>';
         sOut += '          <li>Tél : '+aData.tel+'</li>';
         sOut += '          <li>Ancienne école : '+aData.ecole_prec+'</li>';
+        sOut += '          <li>Date de Rdv : '+aData.dt_rdv+'</li>';
         sOut += '       </ul>';
         sOut += '    </div>';
         sOut += '    <div class="span4">';
@@ -38,7 +39,159 @@ function fnFormatDetails ( nTr )
     return sOut;
 }
 
+$.fn.dataTableExt.afnFiltering.push(
+	function( oSettings, aData, iDataIndex ) {
+		var iMin = document.getElementById('dt_min').value;
+		var dtMin = new Date(iMin);
+		var iMax = document.getElementById('dt_max').value;
+		var dtMax = new Date(iMax);
+		var rdv = new Date(aData[6]);
+		if ( iMin == "" && iMax == "" )
+		{
+			return true;
+		}
+		else if ( iMin == "" && rdv < dtMax )
+		{
+			return true;
+		}
+		else if ( dtMin < rdv && "" == iMax )
+		{
+			return true;
+		}
+		else if ( dtMin < rdv && rdv < dtMax )
+		{
+			return true;
+		}
+		return false;
+	}
+);
+
+$.fn.dataTableExt.afnFiltering.push(
+	function( oSettings, aData, iDataIndex ) {
+		var iMin = document.getElementById('dt_saisie_min').value;
+		var dtMin = new Date(iMin);
+		var iMax = document.getElementById('dt_saisie_max').value;
+		var dtMax = new Date(iMax);
+		var rdv = new Date(aData[9]);
+		if ( iMin == "" && iMax == "" )
+		{
+			return true;
+		}
+		else if ( iMin == "" && rdv < dtMax )
+		{
+			return true;
+		}
+		else if ( dtMin < rdv && "" == iMax )
+		{
+			return true;
+		}
+		else if ( dtMin < rdv && rdv < dtMax )
+		{
+			return true;
+		}
+		return false;
+	}
+);
+
+var classFilter = "";
+
+$.fn.dataTableExt.afnFiltering.push(
+    function( oSettings, aData, iDataIndex ) {
+      if ( classFilter === "" ) {
+        // No class filter applied, so all rows pass
+        return true;
+      }
+      else if ( oSettings.aoData[iDataIndex].nTr.className.indexOf(classFilter) !== -1 ) {
+        // TR element has matching class - pass
+        return true;
+      }
+      // No matching class on the row - failed filtering criterion
+      return false;
+    }
+);
+
+$.fn.dataTableExt.afnFiltering.push(
+	function( oSettings, aData, iDataIndex ) {
+		var iMin = document.getElementById('eval_min').value * 1;
+		var iMax = document.getElementById('eval_max').value * 1;
+		var ieval = aData[8] == "-" ? 0 : aData[8]*1;
+		if ( iMin == "" && iMax == "" )
+		{
+			return true;
+		}
+		else if ( iMin == "" && ieval < iMax )
+		{
+			return true;
+		}
+		else if ( iMin < ieval && "" == iMax )
+		{
+			return true;
+		}
+		else if ( iMin < ieval && ieval < iMax )
+		{
+			return true;
+		}
+		return false;
+	}
+);
+
+$.fn.dataTableExt.oApi.fnGetColumnData = function ( oSettings, iColumn, bUnique, bFiltered, bIgnoreEmpty ) {
+    // check that we have a column id
+    if ( typeof iColumn == "undefined" ) return new Array();
+     
+    // by default we only want unique data
+    if ( typeof bUnique == "undefined" ) bUnique = true;
+     
+    // by default we do want to only look at filtered data
+    if ( typeof bFiltered == "undefined" ) bFiltered = true;
+     
+    // by default we do not want to include empty values
+    if ( typeof bIgnoreEmpty == "undefined" ) bIgnoreEmpty = true;
+    
+    if (typeof oSettings.aoColumns != "undefined") iColumn = oSettings.aoColumns[iColumn].mDataProp;
+     
+     // list of rows which we're going to loop through
+    var aiRows;
+     
+    // use only filtered rows
+    if (bFiltered == true) aiRows = oSettings.aiDisplay;
+    // use all rows
+    else aiRows = oSettings.aiDisplayMaster; // all row numbers
+ 
+    // set up data array   
+    var asResultData = new Array();
+     
+    for (var i=0,c=aiRows.length; i<c; i++) {
+        iRow = aiRows[i];
+        var aData = this.fnGetData(iRow);
+        var sValue = aData.famille;
+         
+        // ignore empty values?
+        if (bIgnoreEmpty == true && sValue.length == 0) continue;
+ 
+ 	// ignore unique values?
+        else if (bUnique == true && jQuery.inArray(sValue, asResultData) > -1) continue;
+         
+        // else push the value onto the result data array
+        else asResultData.push(sValue);
+    }
+     
+    return asResultData;
+}
+ 
+ 
+function fnCreateSelect( aData )
+{
+    var r='<option value=""></option>', i, iLen=aData.length;
+    for ( i=0 ; i<iLen ; i++ )
+    {
+        r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
+    }
+    return r;
+}
+
 $(document).ready(function() {
+	
 	var editor = new $.fn.dataTable.Editor( {
 		"ajaxUrl": "php/table.inscrit.php",
 		"domTable": "#inscrit",
@@ -192,9 +345,9 @@ $(document).ready(function() {
 			}
 		]
 	} );
-
+	
 	oTable = $('#inscrit').dataTable( {
-		"iDisplayLength": 25,
+		"iDisplayLength": 15,
 		"oLanguage": {
 			    "oPaginate": {
 				                   "sFirst":    "Premier",
@@ -210,10 +363,11 @@ $(document).ready(function() {
 			    "sSearch": "Filtrer:"
         		},
         	"bSortClasses": false,
-        	"bStateSave": true,
-        	"bAutoWidth": false,	
+        	"bAutoWidth": false,
+        	"bServerSide": false,	
 		"sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
 		"sAjaxSource": "php/table.inscrit.php",
+		"aaSorting": [[ 1, "asc" ]],
 		"aoColumns": [
 			{ "mData": function ( source, type, val ) {
 					return '<img src="images/details_open.png">';
@@ -249,14 +403,17 @@ $(document).ready(function() {
 			},
 			{
 				"mData": "eval"
+			},
+			{
+				"mData": "dt_saisie"
 			}
 		],
 		"oTableTools": {
 			"sRowSelect": "single",
 			"aButtons": [
-				{ "sExtends": "editor_create", "editor": editor, "sButtonText": "Nouvelle inscription", "sButtonClass": "btn-large" },
-				{ "sExtends": "editor_edit",   "editor": editor, "sButtonText": "Modifier inscription", "sButtonClass": "btn-large"  },
-				{ "sExtends": "editor_remove", "editor": editor, "sButtonText": "Supprimer inscription", "sButtonClass": "btn-large"  },
+				{ "sExtends": "editor_create", "editor": editor, "sButtonText": "Nouvelle inscription", "sButtonClass": "btn-large textb" },
+				{ "sExtends": "editor_edit",   "editor": editor, "sButtonText": "Modifier inscription", "sButtonClass": "btn-large textb"  },
+				{ "sExtends": "editor_remove", "editor": editor, "sButtonText": "Supprimer inscription", "sButtonClass": "btn-large textb"  },
 				{ "sExtends": "print", "sButtonText": "Imprimer", "sButtonClass": "btn-large"  }
 			]
 		},
@@ -278,22 +435,26 @@ $(document).ready(function() {
 				nRow.className = "error";
 				return nRow;
 			}
-			if (delta > 0 && delta < 24)
+			if (delta > 0 && delta < 150)
 			{
 				nRow.className = "info";
 				return nRow;
 			}
 			
+		},
+		"fnInitComplete": function(oSettings, json) {
+		     var selectF = fnCreateSelect( oTable.fnGetColumnData(1) );
+		     $("#select_famille").html(selectF);
 		}
 	} );
-	$('.classe_desiree').click( function () {
+	$(".classe_desiree").live('click', function () {
 			var param = $(this).text();				
-			if(param === 'Tous'){
+			if(param === 'Toutes'){
 				param = '';
 			}			
 			oTable.fnFilter(param, 5);
-			$("#classes li").removeClass("active");
-			$(this).parent().addClass('active');
+			$(".classe_desiree").removeClass('active');
+			$(this).addClass('active');
 		} );
 	$(".control-group .DTE_Field_Type_select .DTE_Field_Name_implication ").hide();
 	$('#inscrit tbody td img').live( 'click', function () {
@@ -314,6 +475,28 @@ $(document).ready(function() {
     	editor.on('onInitEdit', function () {
 	  editor.disable('implication');
 	} );
+	$('#select_famille').change( function () {
+		var param = $(this).val();				
+		oTable.fnFilter(param, 1);
+	} );
+	
+	$('#dt_min').change( function() { oTable.fnDraw(); } );
+	$('#dt_max').change( function() { oTable.fnDraw(); } );
+	
+	$('#dt_saisie_min').change( function() { oTable.fnDraw(); } );
+	$('#dt_saisie_max').change( function() { oTable.fnDraw(); } );
+	
+	$('#eval_min').keyup( function() { oTable.fnDraw(); } );
+	$('#eval_max').keyup( function() { oTable.fnDraw(); } );
+	
+	$('#classFilter').change( function () {
+	    // Store the filter value
+	    classFilter = $(this).val();
+	    
+	    // A full draw will refilter the table
+	    oTable.fnDraw();
+	  } );   
+        
 } );
 
 }(jQuery));

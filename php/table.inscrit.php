@@ -44,7 +44,8 @@ Editor::inst( $db, 'inscrit' )
 		Field::inst( 'hr_rdv' ),
 		Field::inst( 'eval' ),
 		Field::inst( 'points' ),
-		Field::inst( 'statut' )
+		Field::inst( 'statut' ),
+		Field::inst( 'dt_saisie' )
 	)
 	->process( $_POST )
 	->json();

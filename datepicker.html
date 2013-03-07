@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bootstrap DatePicker Demo</title>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+     <link href="css/bootstrap_date.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 40px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+  <div class="container">
+  <div class="page-header">
+    <h1>A Sample Form</h1>
+  </div>
+  <div class="row">
+    <div class="span4">
+      <h2>DatePicker Demo</h2>
+      <p>A simple datepicker widget, based loosely off the design of <code>jquery.date_input.js</code> and heavily rewritten to conform to the visual and code style of Bootstrap.</p>
+      <p>On iOS 5, the datepicker will revert to an <code>input type="date"</code> to invoke the native datepicker.</p>
+      <p>Things to try:</p>
+      <ul>
+        <li>Click on days in adjacent months</li>
+        <li>Use arrow keys</li>
+      </ul>
+    </div>
+    <div class="span12">
+      <form>
+        <fieldset>
+          <legend>Example form legend</legend>
+          <div class="clearfix">
+            <label for="xlInput">X-Large input</label>
+            <div class="input">
+              <input class="xlarge" id="xlInput" name="xlInput" size="30" type="text" />
+            </div>
+          </div><!-- /clearfix -->
+          <div class="clearfix">
+            <label for="normalSelect">Select</label>
+            <div class="input">
+              <select name="normalSelect" id="normalSelect">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+          </div><!-- /clearfix -->
+          <div class="clearfix">
+            <label>Date range</label>
+            <div class="input">
+              <div class="inline-inputs">
+                <input data-datepicker="datepicker" class="small" type="text" value="01/05/2011" />
+                <input class="mini" type="text" value="12:00am" />
+                to
+                <input data-datepicker="datepicker" class="small" type="text" value="05/08/2011" />
+                <input class="mini" type="text" value="11:59pm" />
+                <span class="help-block">All times are shown as Pacific Standard Time (GMT -08:00).</span>
+              </div>
+            </div>
+          </div><!-- /clearfix -->
+          <div class="clearfix">
+            <label for="textarea">Textarea</label>
+            <div class="input">
+              <textarea class="xxlarge" id="textarea2" name="textarea2" rows="3"></textarea>
+              <span class="help-block">
+                Block of help text to describe the field above if need be.
+              </span>
+            </div>
+          </div><!-- /clearfix -->
+          <div class="actions">
+            <input type="submit" class="btn primary" value="Save changes">&nbsp;<button type="reset" class="btn">Cancel</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div><!-- /row -->
+  </div><!-- /container -->
+
+    <!-- Le javascript -->
+    <script src="http://code.jquery.com/jquery-1.7.min.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script>
+      /* Update datepicker plugin so that MM/DD/YYYY format is used. */
+      $.extend($.fn.datepicker.defaults, {
+        parse: function (string) {
+          var matches;
+          if ((matches = string.match(/^(\d{2,2})\/(\d{2,2})\/(\d{4,4})$/))) {
+            return new Date(matches[3], matches[1] - 1, matches[2]);
+          } else {
+            return null;
+          }
+        },
+        format: function (date) {
+          var
+            month = (date.getMonth() + 1).toString(),
+            dom = date.getDate().toString();
+          if (month.length === 1) {
+            month = "0" + month;
+          }
+          if (dom.length === 1) {
+            dom = "0" + dom;
+          }
+          return month + "/" + dom + "/" + date.getFullYear();
+        }
+      });  
+    </script>
+  </body>
+</html>
