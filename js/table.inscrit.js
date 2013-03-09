@@ -341,7 +341,31 @@ $(document).ready(function() {
 						"label": "REFUSEE",
 						"value": "REFUSEE"
 					}
-				]
+				],
+        "i18n": {
+            "create": {
+                "button": "Nouveau",
+                "title":  "Créer nouvelle inscription",
+                "submit": "Créer"
+            },
+            "edit": {
+                "button": "Modifier",
+                "title":  "Modifier inscription",
+                "submit": "Actualiser"
+            },
+            "remove": {
+                "button": "Supprimer",
+                "title":  "Supprimer",
+                "submit": "Supprimer",
+                "confirm": {
+                    "_": "Etes-vous sûr de vouloir supprimer %d lignes?",
+                    "1": "Etes-vous sûr de vouloir supprimer 1 ligne?"
+                }
+            },
+            "error": {
+                "system": "Une erreur s’est produite, contacter l’administrateur système"
+            }
+        }
 			}
 		]
 	} );
