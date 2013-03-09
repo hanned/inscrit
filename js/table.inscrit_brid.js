@@ -445,6 +445,10 @@ $(document).ready(function() {
 			$(".classe_desiree").removeClass('active');
 			$(this).addClass('active');
 		} );
+	$(".dt_rdv_fix").live('click', function () {
+			var param = $(this).text();				
+			oTable.fnFilter(param, 6);
+		} );	
 	$(".control-group .DTE_Field_Type_select .DTE_Field_Name_implication ").hide();
 	$('#inscrit tbody td img').live( 'click', function () {
         	var nTr = $(this).parents('tr')[0];
