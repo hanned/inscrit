@@ -17,8 +17,25 @@ use DataTables\Editor\Validate;
 
 // Build our Editor instance and process the data coming from _POST
 Editor::inst( $db, 'inscrit' )
-  ->fields(
-		Field::inst( 'eval' )
+	->fields(
+		Field::inst( 'famille' ),
+		Field::inst( 'prenom' ),
+		Field::inst( 'dt_naissance' ),
+		Field::inst( 'adresse' ),
+		Field::inst( 'cp' ),
+		Field::inst( 'tel' ),
+		Field::inst( 'email' ),
+		Field::inst( 'ecole_prec' ),
+		Field::inst( 'classe_desiree' ),
+		Field::inst( 'fraterie' ),
+		Field::inst( 'implication' ),
+		Field::inst( 'multi_inscrit' ),
+		Field::inst( 'dt_rdv' ),
+		Field::inst( 'hr_rdv' ),
+		Field::inst( 'eval' ),
+		Field::inst( 'points' ),
+		Field::inst( 'statut' ),
+		Field::inst( 'dt_saisie' )
 	)
 	->process( $_POST )
 	->json();
