@@ -318,7 +318,22 @@ $(document).ready(function() {
 				"default":"0",
 				"type": "text"
 			}
-		]
+		],
+        "i18n": {
+            "create": {
+                "button": "Nouveau",
+                "title":  "Créer nouvelle inscription",
+                "submit": "Ajouter"
+            },
+            "edit": {
+                "button": "Modifier",
+                "title":  "Modifier inscription",
+                "submit": "Actualiser"
+            },
+            "error": {
+                "system": "Une erreur s’est produite, contacter l’administrateur système"
+            }
+        }
 	} );
 	
 	oTable = $('#inscrit').dataTable( {
@@ -388,7 +403,6 @@ $(document).ready(function() {
 			"aButtons": [
 				{ "sExtends": "editor_create", "editor": editor, "sButtonText": "Nouvelle inscription", "sButtonClass": "btn-large textb" },
 				{ "sExtends": "editor_edit",   "editor": editor, "sButtonText": "Modifier inscription", "sButtonClass": "btn-large textb"  },
-				{ "sExtends": "editor_remove", "editor": editor, "sButtonText": "Supprimer inscription", "sButtonClass": "btn-large textb"  },
 				{ "sExtends": "print", "sButtonText": "Imprimer", "sButtonClass": "btn-large"  }
 			]
 		},
