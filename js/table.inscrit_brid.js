@@ -192,7 +192,7 @@ function fnCreateSelect( aData )
 $(document).ready(function() {
 	
 	var editor = new $.fn.dataTable.Editor( {
-		"ajaxUrl": "php/table.inscrit.php",
+		"ajaxUrl": "php/table.inscrit_brid.php",
 		"domTable": "#inscrit",
 		"fields": [
 			{
