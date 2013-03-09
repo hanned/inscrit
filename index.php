@@ -31,7 +31,9 @@ include('lock.php');
 		<?php
 		if ($_SESSION['login_user'] == "admin") {
   			echo "<script type=\"text/javascript\" language=\"javascript\" charset=\"utf-8\" src=\"js/table.inscrit.js\"></script>";
-		} else {
+		} else if ($_SESSION['login_user'] == "teacher") {
+			echo "<script type=\"text/javascript\" language=\"javascript\" charset=\"utf-8\" src=\"js/table.inscrit_teacher.js\"></script>";
+		}  else {
 			echo "<script type=\"text/javascript\" language=\"javascript\" charset=\"utf-8\" src=\"js/table.inscrit_brid.js\"></script>";
 		}
 		?>
