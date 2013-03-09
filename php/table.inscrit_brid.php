@@ -17,7 +17,7 @@ use DataTables\Editor\Validate;
 
 // Build our Editor instance and process the data coming from _POST
 Editor::inst( $db, 'inscrit' )
-  ->fields(
+	->fields(
 		Field::inst( 'famille' )
 			->validator( 'Validate::required' ),
 		Field::inst( 'prenom' )
@@ -37,6 +37,7 @@ Editor::inst( $db, 'inscrit' )
 			->validator( 'Validate::required' ),
 		Field::inst( 'fraterie' )
 			->validator( 'Validate::required' ),
+		Field::inst( 'implication' ),
 		Field::inst( 'multi_inscrit' ),
 		Field::inst( 'dt_rdv' ),
 		Field::inst( 'hr_rdv' ),
