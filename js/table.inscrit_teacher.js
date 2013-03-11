@@ -34,6 +34,11 @@ function fnFormatDetails ( nTr )
 	sOut += '       </ul>';
         sOut += '    </div>';
         sOut += '</div>';
+    if(aData.comment != null && aData.comment != ""){    
+        sOut += '<div class="row-fluid">';
+        sOut += '  <dl class="dl-horizontal"><dt>Commentaires : </dt><dd>'+aData.comment+'</dd></dl>'
+        sOut += '</div>';
+    }    
        sOut += '</div>';         
     return sOut;
 }
@@ -49,15 +54,15 @@ $.fn.dataTableExt.afnFiltering.push(
 		{
 			return true;
 		}
-		else if ( iMin == "" && rdv < dtMax )
+		else if ( iMin == "" && rdv <= dtMax )
 		{
 			return true;
 		}
-		else if ( dtMin < rdv && "" == iMax )
+		else if ( dtMin <= rdv && "" == iMax )
 		{
 			return true;
 		}
-		else if ( dtMin < rdv && rdv < dtMax )
+		else if ( dtMin <= rdv && rdv <= dtMax )
 		{
 			return true;
 		}
@@ -76,15 +81,15 @@ $.fn.dataTableExt.afnFiltering.push(
 		{
 			return true;
 		}
-		else if ( iMin == "" && rdv < dtMax )
+		else if ( iMin == "" && rdv <= dtMax )
 		{
 			return true;
 		}
-		else if ( dtMin < rdv && "" == iMax )
+		else if ( dtMin <= rdv && "" == iMax )
 		{
 			return true;
 		}
-		else if ( dtMin < rdv && rdv < dtMax )
+		else if ( dtMin <= rdv && rdv <= dtMax )
 		{
 			return true;
 		}
@@ -94,18 +99,20 @@ $.fn.dataTableExt.afnFiltering.push(
 
 var classFilter = "";
 
-$.fn.dataTableExt.afnFiltering.push(function( oSettings, aData, iDataIndex ) {
+$.fn.dataTableExt.afnFiltering.push(
+    function( oSettings, aData, iDataIndex ) {
       if ( classFilter === "" ) {
         // No class filter applied, so all rows pass
         return true;
       }
-      else if ( oSettings.aoData[iDataIndex].nTr.className.indexOf(classFilter) !== -1 ) {
+      var cls = getRowClass(aData[6],aData[8]);
+      if (classFilter == cls) {
         // TR element has matching class - pass
         return true;
       }
       // No matching class on the row - failed filtering criterion
       return false;
-}
+    }
 );
 
 $.fn.dataTableExt.afnFiltering.push(
@@ -146,9 +153,7 @@ $.fn.dataTableExt.oApi.fnGetColumnData = function ( oSettings, iColumn, bUnique,
     // by default we do not want to include empty values
     if ( typeof bIgnoreEmpty == "undefined" ) bIgnoreEmpty = true;
     
-    if (typeof oSettings.aoColumns != "undefined") iColumn = oSettings.aoColumns[iColumn].mDataProp;
-     
-     // list of rows which we're going to loop through
+    // list of rows which we're going to loop through
     var aiRows;
      
     // use only filtered rows
@@ -162,7 +167,12 @@ $.fn.dataTableExt.oApi.fnGetColumnData = function ( oSettings, iColumn, bUnique,
     for (var i=0,c=aiRows.length; i<c; i++) {
         iRow = aiRows[i];
         var aData = this.fnGetData(iRow);
-        var sValue = aData.famille;
+        var sValue = "";
+        if(iColumn == 1){
+        	sValue = aData.famille;
+        } else if (iColumn == 4){
+        	sValue = aData.cp;
+        }        
          
         // ignore empty values?
         if (bIgnoreEmpty == true && sValue.length == 0) continue;
@@ -188,6 +198,29 @@ function fnCreateSelect( aData )
     return r;
 }
 
+function getRowClass(dt_rdv, eval) {
+	var className = "";
+	var rdv = new Date(dt_rdv);
+	var today = new Date();
+	var delta = Math.floor((today - rdv) / (60 * 60 * 1000));
+	if(isNaN(delta) || dt_rdv === null){
+		className = "warning";
+	}
+	if (delta > 0 && eval != "0.00")
+	{
+		className = "success";
+	}
+	if (delta > 23 && eval === "0.00")
+	{
+		className = "error";
+	}
+	if (delta > 0 && delta < 24)
+	{
+		className = "info";
+	}
+	return className;
+}
+
 $(document).ready(function() {
 	
 	var editor = new $.fn.dataTable.Editor( {
@@ -199,6 +232,11 @@ $(document).ready(function() {
 				"name": "eval",
 				"default":"0",
 				"type": "text"
+			},
+			{
+				"label": "Commentaires",
+				"name": "comment",
+				"type": "textarea"
 			}
 		],
         "i18n": {
@@ -273,6 +311,10 @@ $(document).ready(function() {
 			},
 			{
 				"mData": "dt_saisie"
+			},
+			{
+				"mData": "ecole_prec",
+				"bVisible":    false
 			}
 		],
 		"oTableTools": {
@@ -283,33 +325,14 @@ $(document).ready(function() {
 			]
 		},
 		"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-			var rdv = new Date(aData.dt_rdv);
-			var today = new Date();
-			var delta = Math.floor((rdv - today) / (60 * 60 * 1000));
-			if(isNaN(delta) || aData.dt_rdv === null){
-				nRow.className = "warning";
-				return nRow;
-			}
-			if (delta < 0 && aData.eval != "0.00")
-			{
-				nRow.className = "success";
-				return nRow;
-			}
-			if (delta < 0 && aData.eval === "0.00")
-			{
-				nRow.className = "error";
-				return nRow;
-			}
-			if (delta > 0 && delta < 150)
-			{
-				nRow.className = "info";
-				return nRow;
-			}
-			
+			nRow.className = getRowClass(aData.dt_rdv, aData.eval);
+			return nRow;
 		},
 		"fnInitComplete": function(oSettings, json) {
 		     var selectF = fnCreateSelect( oTable.fnGetColumnData(1) );
 		     $("#select_famille").html(selectF);
+		     var selectV = fnCreateSelect( oTable.fnGetColumnData(4) );
+		     $("#select_ville").html(selectV);
 		}
 	} );
 	$(".classe_desiree").live('click', function () {
@@ -321,6 +344,10 @@ $(document).ready(function() {
 			$(".classe_desiree").removeClass('active');
 			$(this).addClass('active');
 		} );
+	$(".ecole_prec").live('click', function () {
+		var param = $(this).val();				
+		oTable.fnFilter(param, 10);
+	} );
 	$(".control-group .DTE_Field_Type_select .DTE_Field_Name_implication ").hide();
 	$('#inscrit tbody td img').live( 'click', function () {
         	var nTr = $(this).parents('tr')[0];
@@ -336,10 +363,15 @@ $(document).ready(function() {
             	this.src = "images/details_close.png";
             	oTable.fnOpen( nTr, fnFormatDetails(nTr), 'details' );
         	}
-    	} );
-    	$('#select_famille').change( function () {
+    } );
+    $('#select_famille').change( function () {
 		var param = $(this).val();				
 		oTable.fnFilter(param, 1);
+	} );
+    
+    $('#select_ville').change( function () {
+		var param = $(this).val();				
+		oTable.fnFilter(param, 4);
 	} );
 	
 	$('#dt_min').change( function() { oTable.fnDraw(); } );

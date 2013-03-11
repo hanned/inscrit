@@ -126,10 +126,27 @@ include('lock.php');
 		  <div class="well sidebar-nav" id="classes">
 		    <form>
 		  	<fieldset>
-		  	<legend>Famille</legend>
-		      	<select class="span8" id="select_famille">
-		      	</select>
-		    	<?php if ($_SESSION['login_user'] == "admin") {?>
+		  	<legend>Informations personnelles</legend>
+		    <label>Ville</label>
+		    <select class="span8" id="select_ville">
+		    </select>
+		    <label>Famille</label>
+		    <select class="span8" id="select_famille">
+		    </select>
+		    <label>Ecole précedente</label>
+		    <label class="radio inline">
+			  <input type="radio" name="ecolePrecRadio" class="ecole_prec" value=""> Toutes
+			</label>
+		    <label class="radio inline">
+			  <input type="radio" name="ecolePrecRadio" class="ecole_prec" value="Hanned"> Hanned
+			</label>
+			<label class="radio inline">
+			  <input type="radio" name="ecolePrecRadio"  class="ecole_prec" value="Autres"> Autres
+			</label>
+			<label class="radio inline">
+			  <input type="radio" name="ecolePrecRadio" class="ecole_prec" value="Aucune"> Aucune
+			</label>
+		    <?php if ($_SESSION['login_user'] == "admin") {?>
 		       <legend>Statut</legend>
 		       <select class="span8" id="statut">
 					<option value=""></option>
@@ -145,8 +162,8 @@ include('lock.php');
 		      <input data-datepicker="datepicker"  name="dt_saisie_min" class="input-small" type="text" id="dt_saisie_min"/> < et > <input data-datepicker="datepicker" name="dt_saisie_max" class="input-small" type="text" id="dt_saisie_max"/>
 		      <label>Par statut</label>
 		      <select class="span8" id="classFilter">
-				<option value=""> --- </option>
-				<option value="info">Rdv dans les prochains 7 jours</option>
+				<option value="">  </option>
+				<option value="info">Rdv du jour</option>
 				<option value="warning">Rdv à fixer</option>
 				<option value="error">Rdv passé, sans évaluation</option>
 				<option value="success">Rdv passé, evaluation faite</option>
